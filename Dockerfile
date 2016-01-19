@@ -24,10 +24,6 @@ COPY backup.sh /backup.sh
 COPY restore.sh /restore.sh
 COPY crontab /etc/cron.d/mongodb-backup-cron
 COPY mongodb-entrypoint.sh /mongodb-entrypoint.sh
-COPY createMongoUser.js /usr/local/bin/createMongoUser.js
-
-# Allows connecting from any IP during development.
-# RUN sed -i 's/bind_ip/#bind_ip/g' /etc/mongod.conf
 
 WORKDIR /data
 
