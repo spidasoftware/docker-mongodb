@@ -3,7 +3,7 @@
 if [ ! -f /data/db/.mongodb_password_set ]; then
 	echo "Setting password..."
 
-	mongod --smallfiles --nojournal &
+	mongod --fork --logpath /var/log/mongodb/mongodb.log
 
 	RET=1
 	while [[ RET -ne 0 ]]; do
@@ -14,8 +14,9 @@ if [ ! -f /data/db/.mongodb_password_set ]; then
 	done
 
 	echo "=> Creating an admin user in MongoDB"
-	mongo --eval "var mongoPassword='$MONGODB_PASSWORD'" /usr/local/bin/createMongoUser.js
-	mongo admin --eval "db.shutdownServer();"
+	mongo admin --eval "db.createUser({user: 'minmaster', pwd: '$MONGODB_PASSWORD', roles: [ 'root' ]});"
+	mongo spidadb --eval "db.createUser({user: 'minmaster', pwd: '$MONGODB_PASSWORD', roles: [ 'dbOwner', 'userAdmin' ]});"
+	mongod --shutdown
 
 	echo "=> Done!"
 	touch /data/db/.mongodb_password_set
