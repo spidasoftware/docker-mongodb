@@ -2,7 +2,7 @@
 
 if [ ! -f /data/db/.mongodb_password_set ]; then
 	echo "Setting password..."
-
+	 
 	mongod --fork --logpath /var/log/mongodb/mongodb.log
 
 	RET=1
@@ -13,8 +13,8 @@ if [ ! -f /data/db/.mongodb_password_set ]; then
 	    RET=$?
 	done
 
-	mongoUsername=${MONGODB_USERNAME?"minmaster"}
-	dataDB=${DATA_DB?"spidadb"}
+	mongoUsername=${MONGODB_USERNAME:-"minmaster"}
+	dataDB=${DATA_DB:-"spidadb"}
 	echo "=> Creating an admin user in MongoDB"
 	mongo admin --eval "db.createUser({user: '$mongoUsername', pwd: '$MONGODB_PASSWORD', roles: [ 'root' ]});"
 	mongo $dataDB --eval "db.createUser({user: '$mongoUsername', pwd: '$MONGODB_PASSWORD', roles: [ 'dbOwner', 'userAdmin' ]});"
