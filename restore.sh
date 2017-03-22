@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -u # Treat unset variables as an error when substituting.
+
 #restore from backup dir arg passed in
 ALL_BAKS=/backups
 pushd $ALL_BAKS
@@ -19,6 +21,6 @@ if [ -z "$DIR" ]; then
 fi
 
 #NOTE: --drop will clear existing collections before restore
-mongorestore --verbose --drop --username minmaster --password $MONGODB_PASSWORD $DIR
+mongorestore --verbose --drop --username $MONGODB_USERNAME --password $MONGODB_PASSWORD $DIR
 
 popd

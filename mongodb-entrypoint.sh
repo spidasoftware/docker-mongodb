@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -u # Treat unset variables as an error when substituting.
+
 if [ ! -f /data/db/.mongodb_password_set ]; then
 	echo "Setting password..."
 	 
@@ -13,17 +15,17 @@ if [ ! -f /data/db/.mongodb_password_set ]; then
 	    RET=$?
 	done
 
-	mongoUsername=${MONGODB_USERNAME:-"minmaster"}
-	dataDB=${DATA_DB:-"spidadb"}
 	echo "=> Creating an admin user in MongoDB"
-	mongo admin --eval "db.createUser({user: '$mongoUsername', pwd: '$MONGODB_PASSWORD', roles: [ 'root' ]});"
-	mongo $dataDB --eval "db.createUser({user: '$mongoUsername', pwd: '$MONGODB_PASSWORD', roles: [ 'dbOwner', 'userAdmin' ]});"
+	mongo admin --eval "db.createUser({user: '$MONGODB_USERNAME', pwd: '$MONGODB_PASSWORD', roles: [ 'root' ]});"
+	mongo $MONGODB_DATABASE --eval "db.createUser({user: '$MONGODB_USERNAME', pwd: '$MONGODB_PASSWORD', roles: [ 'dbOwner', 'userAdmin' ]});"
 	mongod --shutdown
 
 	echo "=> Done!"
 	touch /data/db/.mongodb_password_set
 fi
 if [ ! -f /.env_set ]; then
+	echo "MONGODB_DATABASE=$MONGODB_DATABASE" >> /etc/environment
+	echo "MONGODB_USERNAME=$MONGODB_USERNAME" >> /etc/environment
 	echo "MONGODB_PASSWORD=$MONGODB_PASSWORD" >> /etc/environment
 	touch /.env_set
 fi
