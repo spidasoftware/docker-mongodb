@@ -6,12 +6,13 @@
 #
 # To run with mounted directory for storage: 
 # docker run -d -p 27017:27017 -v <db-dir>:/data/db --name mongodb ${machineUUID}
-#
-# To test backup and restore, run this command inside container:
-# cd /backups;./backup.sh;mongo --verbose 127.0.0.1:27017/calcdb -u minmaster -p f1faa381-7568-46c8-8332-d4322376083a --eval "db.dropDatabase()";./restore.sh
-
 
 FROM ubuntu:14.04
+
+# these can be overridden in .docker-common.env but they are not set there by default
+ENV MONGODB_USERNAME=minmaster
+ENV MONGODB_DATABASE=spidadb
+# MONGODB_PASSWORD is set in .docker-common.env
 
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927 && \
   	echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list && \
