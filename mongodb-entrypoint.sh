@@ -16,6 +16,7 @@ if [ ! -f /data/db/.mongodb_password_set ]; then
 	done
 
 	echo "=> Creating an admin user in MongoDB"
+	mongo admin --eval "db.dropUser('$MONGODB_USERNAME');"
 	mongo admin --eval "db.createUser({user: '$MONGODB_USERNAME', pwd: '$MONGODB_PASSWORD', roles: [ 'root' ]});"
 	mongo $MONGODB_DATABASE --eval "db.createUser({user: '$MONGODB_USERNAME', pwd: '$MONGODB_PASSWORD', roles: [ 'dbOwner', 'userAdmin' ]});"
 	mongod --shutdown
@@ -28,6 +29,13 @@ if [ ! -f /.env_set ]; then
 	echo "MONGODB_USERNAME=$MONGODB_USERNAME" >> /etc/environment
 	echo "MONGODB_PASSWORD=$MONGODB_PASSWORD" >> /etc/environment
 	touch /.env_set
+fi
+
+#Handle unclean shutdown
+if [ -f /data/db/mongod.lock ]; then
+	echo 'Unclean shutdown detected.  DB may be in inconsistant state. Repairing..'
+	mongod --dbpath /data/db --repair
+	echo 'Repair complete'
 fi
 
 cron
