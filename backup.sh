@@ -31,7 +31,7 @@ if [[ $(cat /etc/cron.d/mongodb-backup-cron | head -c 9) == "* * * * *" ]]; then
 fi
 
 echo "$(date) Beginning mongodump..."
-mongodump --db $MONGODB_DATABASE --username $MONGODB_USERNAME --password $MONGODB_PASSWORD --out $NEW_BAK
+mongodump --db $MONGODB_DATABASE --username $MONGODB_USERNAME --password $MONGODB_PASSWORD --gzip --out $NEW_BAK
 
 echo "$(date) Latest backup disk usage: $(du -hs $NEW_BAK)"
 echo "$(date) Total backup disk usage: $(du -hs $ALL_BAKS)"
