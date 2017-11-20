@@ -21,6 +21,6 @@ if [ -z "$DIR" ]; then
 fi
 
 #NOTE: --drop will clear existing collections before restore
-mongorestore --verbose --drop --username $MONGODB_USERNAME --password $MONGODB_PASSWORD $DIR
+mongorestore --verbose --drop --username $MONGODB_USERNAME --password $MONGODB_PASSWORD --gzip $DIR
 
 popd
