@@ -23,7 +23,7 @@ RUN echo postfix postfix/mailname string willbechanged.spidastudio.com | debconf
   apt-get install cron vim postfix libsasl2-modules mailutils -y && \
   rm -rf /var/lib/apt/lists/* && \
   sed -i -r "s/default_transport = error/#default_transport = error/" /etc/postfix/main.cf && \
-  sed -i -r "s/default_transport = error/#default_transport = error/" /etc/postfix/main.cf && \
+  sed -i -r "s/relay_transport = error/#relay_transport = error/" /etc/postfix/main.cf && \
   postconf -e "relayhost = [smtp.sendgrid.net]:2525" && \
   postconf -e "smtp_tls_security_level = encrypt" && \
   postconf -e "smtp_sasl_auth_enable = yes" && \
