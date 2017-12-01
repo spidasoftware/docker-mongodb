@@ -4,7 +4,9 @@ set -u # Treat unset variables as an error when substituting.
 
 echo_and_mail_error() {
 	echo $1
-	echo $1 | mailx -s "$(hostname) mongodb backup error" andrew.strominger@spidasoftware.com
+	if [[ ! -z "$ALERT_EMAIL" ]]; then
+		echo $1 | mailx -s "$(hostname) mongodb backup error" $ALERT_EMAIL
+	fi
 }
 
 DAYS_TO_KEEP=7
