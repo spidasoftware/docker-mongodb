@@ -2,6 +2,13 @@
 
 set -u # Treat unset variables as an error when substituting.
 
+echo_and_mail_error() {
+	echo $1
+	if [[ ! -z "$ALERT_EMAIL" ]]; then
+		echo $1 | mailx -s "$(hostname) mongodb backup error" $ALERT_EMAIL
+	fi
+}
+
 DAYS_TO_KEEP=7
 ALL_BAKS=/backups
 pushd $ALL_BAKS
@@ -19,6 +26,9 @@ DIRS_TO_DELETE=$(find $ALL_BAKS -maxdepth 1 -mtime +$DAYS_TO_KEEP -name "mongodu
 if [ -n "$DIRS_TO_DELETE" ]; then 
 	echo "$(date) Deleting backups older than $DAYS_TO_KEEP days [$DIRS_TO_DELETE]"
 	find $ALL_BAKS -maxdepth 1 -mtime +$DAYS_TO_KEEP -name "mongodump-*" -exec rm -rf '{}' ';'
+	if [[ $? -ne 0 ]]; then
+		echo_and_mail_error "error deleting old mongodb backups on $(hostname)"
+	fi
 fi
 
 #If cron job running every minute during development, remove dirs older than 2 minutes
@@ -32,6 +42,9 @@ fi
 
 echo "$(date) Beginning mongodump..."
 mongodump --db $MONGODB_DATABASE --username $MONGODB_USERNAME --password $MONGODB_PASSWORD --gzip --out $NEW_BAK
+if [[ $? -ne 0 ]]; then
+	echo_and_mail_error "mongodump error during mongodb backup on $(hostname)"
+fi
 
 echo "$(date) Latest backup disk usage: $(du -hs $NEW_BAK)"
 echo "$(date) Total backup disk usage: $(du -hs $ALL_BAKS)"
