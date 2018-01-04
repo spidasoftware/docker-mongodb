@@ -9,6 +9,8 @@
 
 FROM ubuntu:14.04
 
+ENV LANG en_US.UTF-8
+
 # these can be overridden in .docker-common.env but they are not set there by default
 ENV MONGODB_USERNAME=minmaster
 ENV MONGODB_DATABASE=spidadb
