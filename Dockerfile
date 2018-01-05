@@ -9,6 +9,7 @@
 
 FROM ubuntu:14.04
 
+RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 
 # these can be overridden in .docker-common.env but they are not set there by default
