@@ -39,6 +39,7 @@ if [ ! -f /.env_set ]; then
 	touch /.env_set
 fi
 
+set +u # We're checking if it's set, don't treat unset variables as an error when substituting.
 if [[ ! -z "$BACKUP_JOBS_SENDGRID_API_KEY" ]]; then
 	echo [smtp.sendgrid.net]:2525 apikey:$BACKUP_JOBS_SENDGRID_API_KEY > /etc/postfix/sasl_passwd
 	postmap /etc/postfix/sasl_passwd
@@ -48,6 +49,7 @@ if [[ ! -z "$BACKUP_JOBS_SENDGRID_API_KEY" ]]; then
 
 	service postfix start
 fi
+set -u # Treat unset variables as an error when substituting.
 
 cron
 echo "$(date) container started. cron job: $(cat /etc/cron.d/mongodb-backup-cron | head -1)" >> /backups/backup.log
