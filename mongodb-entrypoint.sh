@@ -3,7 +3,7 @@
 set -u # Treat unset variables as an error when substituting.
 
 #Handle unclean shutdown
-if [ -f /data/db/mongod.lock ]; then
+if [ -s /data/db/mongod.lock ]; then
 	echo 'Unclean shutdown detected.  DB may be in inconsistant state. Repairing..'
 	mongod --dbpath /data/db --repair
 	echo 'Repair complete'

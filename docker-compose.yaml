@@ -1,0 +1,14 @@
+version: '3'
+services:
+  dev:
+    env_file: .env
+    container_name: spida_mongodb
+    build:
+      context: .
+    restart: always
+    ports: 
+      - "27017:27017"
+    volumes:
+      - ${DB_VOLUME_DIR}:/data/db
+    environment:
+      - MONGODB_PASSWORD=${MONGODB_PASSWORD}
