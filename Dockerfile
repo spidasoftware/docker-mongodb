@@ -19,7 +19,7 @@ ENV MONGODB_DATABASE=spidadb
 
 RUN echo postfix postfix/mailname string willbechanged.spidastudio.com | debconf-set-selections && \
   echo postfix postfix/main_mailer_type string 'Local Only' | debconf-set-selections && \
-  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927 && \
+  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D68FA50FEA312927 && \
   echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list && \
   apt-get update && \
   apt-get install -y mongodb-org=3.2.6 mongodb-org-server=3.2.6 mongodb-org-shell=3.2.6 mongodb-org-mongos=3.2.6 mongodb-org-tools=3.2.6 && \
